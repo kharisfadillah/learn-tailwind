@@ -4,6 +4,9 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Sizing from "./pages/Sizing";
 import Layout from "./pages/Layout";
+import LandingPage from "./pages/LandingPage";
+import Flex from "./pages/Flex";
+import Grid from "./pages/Grid";
 
 function App() {
 
@@ -14,6 +17,9 @@ function App() {
         <Route path="/spacing" element={<Spacing />} />
         <Route path="/sizing" element={<Sizing />} />
         <Route path="/layout" element={<Layout />} />
+        <Route path="/flex" element={<Flex />} />
+        <Route path="/grid" element={<Grid />} />
+        <Route path="/landing-page" element={<LandingPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

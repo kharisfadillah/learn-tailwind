@@ -16,6 +16,15 @@ export default function Home() {
             <a href="/layout" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 Layout
             </a>
+            <a href="/flex" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Flex
+            </a>
+            <a href="/grid" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Grid
+            </a>
+            <a href="/landing-page" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Landing Page
+            </a>
         </div>
     );
 }
