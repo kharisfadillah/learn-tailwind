@@ -118,7 +118,7 @@ export default function Grid() {
         <div className="bg-red-500 p-4">This is the longest text here</div>
       </div>
       <h2 className="mt-4 text-xl font-bold underline">Grid Auto Rows</h2>
-      <div className="grid grid-cols-3 auto-rows-min gap-4 p-4 bg-gray-100 border border-gray-700">
+      <div className="grid grid-cols-3 grid-flow-row auto-rows-min gap-4 p-4 bg-gray-100 border border-gray-700">
         <div className="bg-blue-500 text-white p-4 rounded-xl">Item 1</div>
         <div className="bg-green-500 text-white p-8 rounded-xl">Item 2</div>
         <div className="bg-red-500 text-white p-12 rounded-xl h-32">
@@ -128,7 +128,7 @@ export default function Grid() {
         <div className="bg-yellow-500 text-white p-2 rounded-xl">Item 5</div>
         <div className="bg-gray-500 text-white p-10 rounded-xl">Item 6</div>
       </div>
-      <div className="grid grid-cols-3 auto-rows-max gap-4 p-4 bg-gray-100 border border-gray-700">
+      <div className="grid grid-cols-3 grid-flow-row auto-rows-max gap-4 p-4 bg-gray-100 border border-gray-700">
         <div className="bg-blue-500 text-white p-4 rounded-xl">Item 1</div>
         <div className="bg-green-500 text-white p-8 rounded-xl">Item 2</div>
         <div className="bg-red-500 text-white p-12 rounded-xl h-32">
