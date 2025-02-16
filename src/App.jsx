@@ -8,6 +8,7 @@ import LandingPage from "./pages/LandingPage";
 import Flex from "./pages/Flex";
 import Grid from "./pages/Grid";
 import Kalkulator from "./pages/Kalkulator";
+import Calculator from "./pages/Calculator";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/grid" element={<Grid />} />
         <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/kalkulator" element={<Kalkulator />} />
+        <Route path="/calculator" element={<Calculator />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
