@@ -11,11 +11,11 @@ const TombolFungsi = ({ label }) => {
       {label}
     </button>
   );
-}
+};
 
 TombolFungsi.propTypes = {
   label: PropTypes.string.isRequired,
-}
+};
 
 const TombolAngka = ({ label, onClick }) => {
   return (
@@ -27,12 +27,12 @@ const TombolAngka = ({ label, onClick }) => {
       {label}
     </button>
   );
-}
+};
 
 TombolAngka.propTypes = {
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-}
+};
 
 const TombolOperasi = ({ label }) => {
   return (
@@ -40,11 +40,11 @@ const TombolOperasi = ({ label }) => {
       {label}
     </button>
   );
-}
+};
 
 TombolOperasi.propTypes = {
   label: PropTypes.string.isRequired,
-}
+};
 
 const TombolNol = () => {
   return (
@@ -52,18 +52,25 @@ const TombolNol = () => {
       0
     </button>
   );
-}
+};
 
 export default function Kalkulator() {
   useEffect(() => {
     document.title = "Belajar Tailwind - Kalkulator";
   }, []);
 
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("0");
   // const [result, setResult] = useState("");
 
   const handleClick = (value) => {
-    setInput((prev) => prev + value);
+    setInput((prev) => {
+      console.log(prev);
+      if (prev == "0") {
+        value;
+      } else {
+        prev + value
+      }
+    });
   };
 
   // const handleClear = () => {
@@ -74,7 +81,9 @@ export default function Kalkulator() {
     <div className="flex justify-center items-center h-screen">
       {/* <div className="flex h-screen items-center justify-center"> */}
       <div className="bg-[#17181A] p-4 rounded-3xl shadow-md max-w-fit">
-        <div className="mt-4 rounded-lg text-xl text-right text-[#828282]">{input}</div>
+        <div className="mt-4 rounded-lg text-xl text-right text-[#828282]">
+          {input}
+        </div>
         {/* <div className="rounded-lg text-3xl text-right text-[#D4D4D2]">{result}</div> */}
         <div className="mt-4 grid grid-cols-4 gap-2">
           <TombolFungsi label="AC" />
@@ -94,7 +103,7 @@ export default function Kalkulator() {
           <TombolAngka label="3" onClick={handleClick} />
           <TombolOperasi label="+" />
           <TombolNol />
-          <TombolAngka label="." />
+          <TombolAngka label="." onClick={handleClick}/>
           <TombolOperasi label="=" />
           {/* <TombolFungsi label="AC" />
           <TombolFungsi label="±" />
@@ -110,7 +119,6 @@ export default function Kalkulator() {
           <Tombol label="9" /> */}
         </div>
       </div>
-
     </div>
   );
 }
