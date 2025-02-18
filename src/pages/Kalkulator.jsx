@@ -84,7 +84,7 @@ export default function Kalkulator() {
     console.log(value);
     if (value === "=") {
       setInput(result);
-      setResult(eval(result));
+      setResult(new Function("return " + result.replace("×", "*"))());
     } else if (value === "AC") {
       setInput("0");
       setResult("0");
@@ -92,10 +92,6 @@ export default function Kalkulator() {
       setResult((prev) => (prev === "0" ? value : prev + value));
     }
   };
-
-  // const handleClear = () => {
-  //   setInput("");
-  // };
 
   return (
     <div className="flex justify-center items-center h-screen">
