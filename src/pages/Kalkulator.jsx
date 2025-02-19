@@ -84,18 +84,23 @@ export default function Kalkulator() {
     console.log(value);
     if (value === "=") {
       setInput(result);
-      setResult(new Function("return " + result.replace("×", "*"))());
+      setResult(String(new Function("return " + result.replace("×", "*"))()));
     } else if (value === "AC") {
       setInput("0");
       setResult("0");
     } else {
-      setResult((prev) => (prev === "0" ? value : prev + value));
+      setResult((prev) => {
+        // Jika hasil sebelumnya adalah "0" (dari perhitungan) dan user memasukkan angka baru, gantikan "0" dengan angka tersebut
+        if (prev === "0" && value !== "." && value !== "0") {
+          return value;
+        }
+        return prev + value;
+      });
     }
   };
 
   return (
     <div className="flex justify-center items-center h-screen">
-      {/* <div className="flex h-screen items-center justify-center"> */}
       <div className="bg-[#17181A] p-4 rounded-3xl shadow-md max-w-fit">
         <div className="mt-4 rounded-lg text-xl text-right text-[#828282]">
           {input}
@@ -123,18 +128,6 @@ export default function Kalkulator() {
           <TombolNol onClick={handleClick} />
           <TombolAngka label="." onClick={handleClick} />
           <TombolOperasi label="=" onClick={handleClick} />
-          {/* <TombolFungsi label="AC" />
-          <TombolFungsi label="±" />
-          <TombolFungsi label="%" />
-          <TombolOperasi label="÷" /> */}
-          {/* <Tombol label="2" />
-          <Tombol label="3" />
-          <Tombol label="4" />
-          <Tombol label="5" />
-          <Tombol label="6" />
-          <Tombol label="7" />
-          <Tombol label="8" />
-          <Tombol label="9" /> */}
         </div>
       </div>
     </div>
