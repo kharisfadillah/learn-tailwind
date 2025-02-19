@@ -17,4 +17,21 @@ ServiceCard.propTypes = {
   description: PropTypes.string.isRequired,
 };
 
+const ServiceCard2 = (props) => {
+  return (
+    <div className="bg-white p-6 rounded-lg border text-center">
+      <div className="bg-blue-500 text-white p-4 rounded-full w-16 h-16 mx-auto flex items-center justify-center text-2xl">
+        🎨
+      </div>
+      <h3 className="mt-4 text-xl font-bold">{props.label}</h3>
+      <p className="mt-2 text-gray-600">{props.description}</p>
+    </div>
+  );
+};
+
+ServiceCard2.propTypes = {
+  label: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+};
+
 export default ServiceCard;

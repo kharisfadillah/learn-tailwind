@@ -90,7 +90,6 @@ export default function Kalkulator() {
       setResult("0");
     } else {
       setResult((prev) => {
-        // Jika hasil sebelumnya adalah "0" (dari perhitungan) dan user memasukkan angka baru, gantikan "0" dengan angka tersebut
         if (prev === "0" && value !== "." && value !== "0") {
           return value;
         }
