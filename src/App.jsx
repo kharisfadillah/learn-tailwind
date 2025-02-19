@@ -9,6 +9,7 @@ import Flex from "./pages/Flex";
 import Grid from "./pages/Grid";
 import Kalkulator from "./pages/Kalkulator";
 import Calculator from "./pages/Calculator";
+import HealthCare from "./pages/HealthCare";
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/kalkulator" element={<Kalkulator />} />
         <Route path="/calculator" element={<Calculator />} />
+        <Route path="/healthcare" element={<HealthCare />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
