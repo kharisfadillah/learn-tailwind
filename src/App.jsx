@@ -10,6 +10,9 @@ import Grid from "./pages/Grid";
 import Kalkulator from "./pages/Kalkulator";
 import Calculator from "./pages/Calculator";
 import HealthCare from "./pages/HealthCare";
+import Modal from "./pages/Modal";
+import Modal2 from "./pages/Modal2";
+import Pos from "./pages/Pos";
 
 function App() {
 
@@ -26,6 +29,9 @@ function App() {
         <Route path="/kalkulator" element={<Kalkulator />} />
         <Route path="/calculator" element={<Calculator />} />
         <Route path="/healthcare" element={<HealthCare />} />
+        <Route path="/modal" element={<Modal />} />
+        <Route path="/modal-2" element={<Modal2 />} />
+        <Route path="/pos" element={<Pos />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -34,6 +34,15 @@ export default function Home() {
             <a href="/healthcare" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 HealthCare
             </a>
+            <a href="/modal" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Modal
+            </a>
+            <a href="/modal-2" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Modal2
+            </a>
+            <a href="/pos" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Pos
+            </a>
         </div>
     );
 }
