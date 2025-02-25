@@ -1,10 +1,113 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+// import { openDB } from "idb";
 
 export default function Pos() {
-  // const [products, setProducts] = useState([]);
+  // const [db, setDb] = useState(null);
+  // const [first, setFirst] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [cash, setCash] = useState(0);
+  // const [keyword, setKeyword] = useState("");
+  // const initDB = async () => {
+  //   const database = await openDB("tailwind_store", 1, {
+  //     upgrade(db) {
+  //       if (!db.objectStoreNames.contains("products")) {
+  //         db.createObjectStore("products", {
+  //           keyPath: "id",
+  //           autoIncrement: true,
+  //         });
+  //       }
+  //       if (!db.objectStoreNames.contains("sales")) {
+  //         db.createObjectStore("sales", {
+  //           keyPath: "id",
+  //           autoIncrement: true,
+  //         });
+  //       }
+  //     },
+  //   });
+  //   setDb(database);
+  // };
+
+  const loadProducts = async () => {
+    const response = await fetch("sample.json");
+    const data = await response.json();
+    setProducts(data.products);
+  };
+
+  const priceFormat = (number) => {
+    return number ? `Rp. ${numberFormat(number)}` : `Rp. 0`;
+  };
+
+  // const addToCart = (product) => {
+  //   const index = findCartIndex(product);
+  //   let tempCart = cart.slice();
+  //   if (index === -1) {
+  //     tempCart.push({
+  //       productId: product.id,
+  //       image: product.image,
+  //       name: product.name,
+  //       price: product.price,
+  //       option: product.option,
+  //       qty: 1,
+  //     });
+  //   } else {
+  //     tempCart[index].qty += 1;
+  //   }
+  //   setCart(tempCart);
+  //   // beep();
+  //   // updateChange();
+  // };
+
+  // const findCartIndex = (product) => {
+  //   return cart.findIndex((p) => p.productId === product.id);
+  // };
+
+  // const startWithSampleData = async () => {
+  //   const response = await fetch("sample.json");
+  //   const data = await response.json();
+  //   console.log(data);
+  //   setProducts(data.products);
+
+  //   for (let product of data.products) {
+  //     await db.add("products", product);
+  //   }
+
+  //   // Ubah state firstTime menjadi false
+  //   setFirstTime(false);
+  // };
+
+  // const startBlank = () => {
+  //   setFirstTime(false);
+  // };
+
+  // const setFirstTime = (firstTime) => {
+  //   setFirst(firstTime);
+  //   if (firstTime) {
+  //     localStorage.removeItem("first_time");
+  //   } else {
+  //     localStorage.setItem("first_time", new Date().getTime());
+  //   }
+  // };
+
+  const numberFormat = (number) => {
+    if (!number) return "";
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const addCash = (amount) => {
+    console.log(`click ${amount}`);
+    setCash((cash || 0) + amount);
+    // this.updateChange();
+    // this.beep();
+  };
 
   useEffect(() => {
     document.body.classList.add("bg-[#ECEFF1]");
+
+    loadProducts();
+
+    // initDB();
+
+    // setFirstTime(localStorage.getItem("first_time") === null);
 
     return () => {
       document.body.classList.remove("bg-[#ECEFF1]");
@@ -193,65 +296,59 @@ export default function Pos() {
                 type="text"
                 className="bg-white rounded-3xl shadow text-lg full w-full h-16 py-4 pl-16 transition-shadow focus:shadow-2xl focus:outline-none"
                 placeholder="Cari menu ..."
-                // x-model="keyword"
+                // value={keyword}
+                // onChange={(e) => setKeyword(e.target.value)}
               />
             </div>
             <div className="h-full overflow-hidden mt-4">
               <div className="h-full overflow-y-auto px-2">
-                <div className="select-none bg-[#CFD8DC] rounded-3xl flex flex-wrap content-center justify-center h-full opacity-25">
-                  <div className="w-full text-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-24 w-24 inline-block"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
-                      />
-                    </svg>
-                    <p className="text-xl">
-                      YOU DON&apos;T HAVE
-                      <br />
-                      ANY PRODUCTS TO SHOW
-                    </p>
+                {products.length === 0 ? (
+                  <div className="select-none bg-[#CFD8DC] rounded-3xl flex flex-wrap content-center justify-center h-full opacity-25">
+                    <div className="w-full text-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-24 w-24 inline-block"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
+                        />
+                      </svg>
+                      <p className="text-xl">
+                        YOU DON&apos;T HAVE
+                        <br />
+                        ANY PRODUCTS TO SHOW
+                      </p>
+                    </div>
                   </div>
-                </div>
-                {/* <div
-              className="select-none bg-blue-gray-100 rounded-3xl flex flex-wrap content-center justify-center h-full opacity-25"
-              x-show="filteredProducts().length === 0 && keyword.length > 0"
-            >
-              <div className="w-full text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-24 w-24 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <p className="text-xl">
-                  EMPTY SEARCH RESULT
-                  <br/>
-                  "<span x-text="keyword" className="font-semibold"></span>"
-                </p>
-              </div>
-            </div>
-            <div x-show="filteredProducts().length" className="grid grid-cols-4 gap-4 pb-3">
-              <template x-for="product in filteredProducts()" :key="product.id">
-                <div
-                  role="button"
-                  class="select-none cursor-pointer transition-shadow overflow-hidden rounded-2xl bg-white shadow hover:shadow-lg"
-                  :title="product.name"
-                  x-on:click="addToCart(product)"
-                >
-                  <img :src="product.image" :alt="product.name">
-                  <div class="flex pb-3 px-3 text-sm -mt-3">
-                    <p class="flex-grow truncate mr-1" x-text="product.name"></p>
-                    <p class="nowrap font-semibold" x-text="priceFormat(product.price)"></p>
+                ) : (
+                  <div className="grid grid-cols-4 gap-4 pb-3">
+                    {products.map((product) => (
+                      <div
+                        key={product.id}
+                        role="button"
+                        className="select-none cursor-pointer transition-shadow overflow-hidden rounded-2xl bg-white shadow hover:shadow-lg"
+                        title={product.name}
+                        // onClick={addToCart(product)}
+                      >
+                        <img src={product.image} alt={product.name} />
+                        <div className="flex pb-3 px-3 text-sm -mt-3">
+                          <p className="flex-grow truncate mr-1">
+                            {product.name}
+                          </p>
+                          <p className="nowrap font-semibold">
+                            {priceFormat(product.price)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              </template>
-            </div> */}
+                )}
               </div>
             </div>
           </div>
@@ -285,35 +382,24 @@ export default function Pos() {
                     <div className="flex-grow text-left">CASH</div>
                     <div className="flex text-right">
                       <div className="mr-2">Rp</div>
-                      <input
-                        value="200.000"
+                      {/* <input
+                        value={numberFormat(cash)}
                         type="text"
                         className="w-28 text-right bg-white shadow rounded-lg focus:bg-white focus:shadow-lg px-2 focus:outline-none"
-                      />
+                      /> */}
                     </div>
                   </div>
                   <hr className="my-2" />
                   <div className="grid grid-cols-3 gap-2 mt-2">
-                    {/* <template x-for="money in moneys"> */}
-                    <button className="bg-white rounded-lg shadow hover:shadow-lg focus:outline-none inline-block px-2 py-1 text-sm">
-                      +<span>2.000</span>
-                    </button>
-                    <button className="bg-white rounded-lg shadow hover:shadow-lg focus:outline-none inline-block px-2 py-1 text-sm">
-                      +<span>5.000</span>
-                    </button>
-                    <button className="bg-white rounded-lg shadow hover:shadow-lg focus:outline-none inline-block px-2 py-1 text-sm">
-                      +<span>10.000</span>
-                    </button>
-                    <button className="bg-white rounded-lg shadow hover:shadow-lg focus:outline-none inline-block px-2 py-1 text-sm">
-                      +<span>20.000</span>
-                    </button>
-                    <button className="bg-white rounded-lg shadow hover:shadow-lg focus:outline-none inline-block px-2 py-1 text-sm">
-                      +<span>50.000</span>
-                    </button>
-                    <button className="bg-white rounded-lg shadow hover:shadow-lg focus:outline-none inline-block px-2 py-1 text-sm">
-                      +<span>100.000</span>
-                    </button>
-                    {/* </template> */}
+                    {[2000, 5000, 10000, 20000, 50000, 100000].map((item) => (
+                      <button
+                        key={item}
+                        className="bg-white rounded-lg shadow hover:shadow-lg focus:outline-none inline-block px-2 py-1 text-sm"
+                        onClick={() => addCash(item)}
+                      >
+                        +<span>{numberFormat(item)}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
                 <div className="flex mb-3 text-lg font-semibold bg-cyan-50 text-blue-gray-700 rounded-lg py-2 px-3">
@@ -350,93 +436,6 @@ export default function Pos() {
                   SUBMIT
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          //   x-show="firstTime"
-          className="fixed bg-[rgba(100,120,130,0.6)] backdrop-blur-[10px] rounded-lg border border-white/20 w-full h-screen left-0 top-0 z-10 flex flex-wrap justify-center content-center p-24"
-        >
-          <div className="w-96 rounded-3xl p-8 bg-white shadow-xl">
-            <div className="text-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="inline-block"
-                width="123.3"
-                height="123.233"
-                viewBox="0 0 32.623 32.605"
-              >
-                <path
-                  d="M15.612 0c-.36.003-.705.01-1.03.021C8.657.223 5.742 1.123 3.4 3.472.714 6.166-.145 9.758.019 17.607c.137 6.52.965 9.271 3.542 11.768 1.31 1.269 2.658 2 4.73 2.57.846.232 2.73.547 3.56.596.36.021 2.336.048 4.392.06 3.162.018 4.031-.016 5.63-.221 3.915-.504 6.43-1.778 8.234-4.173 1.806-2.396 2.514-5.731 2.516-11.846.001-4.407-.42-7.59-1.278-9.643-1.463-3.501-4.183-5.53-8.394-6.258-1.634-.283-4.823-.475-7.339-.46z"
-                  fill="#fff"
-                />
-                <path
-                  d="M16.202 13.758c-.056 0-.11 0-.16.003-.926.031-1.38.172-1.747.538-.42.421-.553.982-.528 2.208.022 1.018.151 1.447.553 1.837.205.198.415.313.739.402.132.036.426.085.556.093.056.003.365.007.686.009.494.003.63-.002.879-.035.611-.078 1.004-.277 1.286-.651.282-.374.392-.895.393-1.85 0-.688-.066-1.185-.2-1.506-.228-.547-.653-.864-1.31-.977a7.91 7.91 0 00-1.147-.072zM16.22 19.926c-.056 0-.11 0-.16.003-.925.031-1.38.172-1.746.539-.42.42-.554.981-.528 2.207.02 1.018.15 1.448.553 1.838.204.198.415.312.738.4.132.037.426.086.556.094.056.003.365.007.686.009.494.003.63-.002.88-.034.61-.08 1.003-.278 1.285-.652.282-.374.393-.895.393-1.85 0-.688-.066-1.185-.2-1.506-.228-.547-.653-.863-1.31-.977a7.91 7.91 0 00-1.146-.072zM22.468 13.736c-.056 0-.11.001-.161.003-.925.032-1.38.172-1.746.54-.42.42-.554.98-.528 2.207.021 1.018.15 1.447.553 1.837.205.198.415.313.739.401.132.037.426.086.556.094.056.003.364.007.685.009.494.003.63-.002.88-.035.611-.078 1.004-.277 1.285-.651.282-.375.393-.895.393-1.85 0-.688-.065-1.185-.2-1.506-.228-.547-.653-.864-1.31-.977a7.91 7.91 0 00-1.146-.072z"
-                  fill="#00dace"
-                />
-                <path
-                  d="M9.937 13.736c-.056 0-.11.001-.161.003-.925.032-1.38.172-1.746.54-.42.42-.554.98-.528 2.207.021 1.018.15 1.447.553 1.837.204.198.415.313.738.401.133.037.427.086.556.094.056.003.365.007.686.009.494.003.63-.002.88-.035.61-.078 1.003-.277 1.285-.651.282-.375.393-.895.393-1.85 0-.688-.066-1.185-.2-1.506-.228-.547-.653-.864-1.31-.977a7.91 7.91 0 00-1.146-.072zM16.202 7.59c-.056 0-.11 0-.16.002-.926.032-1.38.172-1.747.54-.42.42-.553.98-.528 2.206.022 1.019.151 1.448.553 1.838.205.198.415.312.739.401.132.037.426.086.556.093.056.003.365.007.686.01.494.002.63-.003.879-.035.611-.079 1.004-.278 1.286-.652.282-.374.392-.895.393-1.85 0-.688-.066-1.185-.2-1.505-.228-.547-.653-.864-1.31-.978a7.91 7.91 0 00-1.147-.071z"
-                  fill="#00bcd4"
-                />
-                <g>
-                  <path
-                    d="M15.612 0c-.36.003-.705.01-1.03.021C8.657.223 5.742 1.123 3.4 3.472.714 6.166-.145 9.758.019 17.607c.137 6.52.965 9.271 3.542 11.768 1.31 1.269 2.658 2 4.73 2.57.846.232 2.73.547 3.56.596.36.021 2.336.048 4.392.06 3.162.018 4.031-.016 5.63-.221 3.915-.504 6.43-1.778 8.234-4.173 1.806-2.396 2.514-5.731 2.516-11.846.001-4.407-.42-7.59-1.278-9.643-1.463-3.501-4.183-5.53-8.394-6.258-1.634-.283-4.823-.475-7.339-.46z"
-                    fill="#fff"
-                  />
-                  <path
-                    d="M16.202 13.758c-.056 0-.11 0-.16.003-.926.031-1.38.172-1.747.538-.42.421-.553.982-.528 2.208.022 1.018.151 1.447.553 1.837.205.198.415.313.739.402.132.036.426.085.556.093.056.003.365.007.686.009.494.003.63-.002.879-.035.611-.078 1.004-.277 1.286-.651.282-.374.392-.895.393-1.85 0-.688-.066-1.185-.2-1.506-.228-.547-.653-.864-1.31-.977a7.91 7.91 0 00-1.147-.072zM16.22 19.926c-.056 0-.11 0-.16.003-.925.031-1.38.172-1.746.539-.42.42-.554.981-.528 2.207.02 1.018.15 1.448.553 1.838.204.198.415.312.738.4.132.037.426.086.556.094.056.003.365.007.686.009.494.003.63-.002.88-.034.61-.08 1.003-.278 1.285-.652.282-.374.393-.895.393-1.85 0-.688-.066-1.185-.2-1.506-.228-.547-.653-.863-1.31-.977a7.91 7.91 0 00-1.146-.072zM22.468 13.736c-.056 0-.11.001-.161.003-.925.032-1.38.172-1.746.54-.42.42-.554.98-.528 2.207.021 1.018.15 1.447.553 1.837.205.198.415.313.739.401.132.037.426.086.556.094.056.003.364.007.685.009.494.003.63-.002.88-.035.611-.078 1.004-.277 1.285-.651.282-.375.393-.895.393-1.85 0-.688-.065-1.185-.2-1.506-.228-.547-.653-.864-1.31-.977a7.91 7.91 0 00-1.146-.072z"
-                    fill="#00dace"
-                  />
-                  <path
-                    d="M9.937 13.736c-.056 0-.11.001-.161.003-.925.032-1.38.172-1.746.54-.42.42-.554.98-.528 2.207.021 1.018.15 1.447.553 1.837.204.198.415.313.738.401.133.037.427.086.556.094.056.003.365.007.686.009.494.003.63-.002.88-.035.61-.078 1.003-.277 1.285-.651.282-.375.393-.895.393-1.85 0-.688-.066-1.185-.2-1.506-.228-.547-.653-.864-1.31-.977a7.91 7.91 0 00-1.146-.072zM16.202 7.59c-.056 0-.11 0-.16.002-.926.032-1.38.172-1.747.54-.42.42-.553.98-.528 2.206.022 1.019.151 1.448.553 1.838.205.198.415.312.739.401.132.037.426.086.556.093.056.003.365.007.686.01.494.002.63-.003.879-.035.611-.079 1.004-.278 1.286-.652.282-.374.392-.895.393-1.85 0-.688-.066-1.185-.2-1.505-.228-.547-.653-.864-1.31-.978a7.91 7.91 0 00-1.147-.071z"
-                    fill="#00bcd4"
-                  />
-                </g>
-              </svg>
-              <h3 className="text-center text-2xl mb-8">FIRST TIME?</h3>
-            </div>
-            <div className="text-left">
-              <button
-                // x-on:click="startWithSampleData()"
-                className="text-left w-full mb-3 rounded-xl bg-[#607d8b] text-white focus:outline-none hover:bg-cyan-400 px-4 py-4"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 inline-block -mt-1 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"
-                  />
-                </svg>
-                LOAD SAMPLE DATA
-              </button>
-              <button
-                // x-on:click="startBlank()"
-                className="text-left w-full rounded-xl bg-[#607d8b] text-white focus:outline-none hover:bg-teal-400 px-4 py-4"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 inline-block -mt-1 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                  />
-                </svg>
-                LEAVE IT EMPTY
-              </button>
             </div>
           </div>
         </div>

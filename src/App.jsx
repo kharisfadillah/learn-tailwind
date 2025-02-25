@@ -13,6 +13,7 @@ import HealthCare from "./pages/HealthCare";
 import Modal from "./pages/Modal";
 import Modal2 from "./pages/Modal2";
 import Pos from "./pages/Pos";
+import Pos2 from "./pages/Pos2";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/modal" element={<Modal />} />
         <Route path="/modal-2" element={<Modal2 />} />
         <Route path="/pos" element={<Pos />} />
+        <Route path="/pos-2" element={<Pos2 />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
