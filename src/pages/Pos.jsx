@@ -12,6 +12,7 @@ export default function Pos() {
   const [receiptNo, setReceiptNo] = useState(null);
   const [receiptDate, setReceiptDate] = useState(null);
   const [keyword, setKeyword] = useState("");
+  const [isSubmitable, setIsSubmitable] = useState(false);
   const [isShowModalReceipt, setIsShowModalReceipt] = useState(false);
   // const initDB = async () => {
   //   const database = await openDB("tailwind_store", 1, {
@@ -60,7 +61,7 @@ export default function Pos() {
     }
     setCart(tempCart);
     beep();
-    updateChange();
+    // updateChange();
   };
 
   const findCartIndex = (product) => {
@@ -107,7 +108,7 @@ export default function Pos() {
     console.log(`click ${amount}`);
     setCash((cash || 0) + amount);
     // this.updateChange();
-    // this.beep();
+    beep();
   };
 
   const addQty = (item, qty) => {
@@ -125,23 +126,25 @@ export default function Pos() {
       beep();
     }
     setCart(tempCart);
-    updateChange();
+    // updateChange();
   };
 
-  const updateChange = () => {
-    setChange(cash - getTotalPrice());
-  };
+  // const updateChange = () => {
+  //   console.log(`cash : ${cash}`);
+  //   console.log(`total price : ${getTotalPrice()}`);
+  //   setChange(cash - getTotalPrice());
+  // };
   const updateCash = (value) => {
     setCash(parseFloat(value.replace(/[^0-9]+/g, "")));
-    updateChange();
+    // updateChange();
   };
   const getTotalPrice = () => {
     return cart.reduce((total, item) => total + item.qty * item.price, 0);
   };
 
-  const submitable = () => {
-    return change >= 0 && cart.length > 0;
-  };
+  // const submitable = () => {
+  //   return change >= 0 && cart.length > 0;
+  // };
 
   const submit = () => {
     const time = new Date();
@@ -163,9 +166,27 @@ export default function Pos() {
     setCart([]);
     setReceiptNo(null);
     setReceiptDate(null);
-    updateChange();
+    // updateChange();
     clearSound();
   };
+
+  const printAndProceed = () => {
+    const receiptContent = document.getElementById('receipt-content');
+    const titleBefore = document.title;
+
+    setTimeout(() => {
+      const printArea = document.getElementById('print-area');
+      printArea.innerHTML = receiptContent.innerHTML;
+
+      window.print(); // Cetak setelah DOM diperbarui
+
+      // Reset setelah print selesai
+      printArea.innerHTML = "";
+      document.title = titleBefore;
+      setIsShowModalReceipt(false);
+      clear();
+    }, 100); // Delay agar React sempat update DOM
+  }
 
   const beep = () => {
     playSound("sound/beep-29.mp3");
@@ -199,6 +220,14 @@ export default function Pos() {
     const rg = keyword ? new RegExp(keyword, "gi") : null;
     setFilteredProducts(products.filter((p) => !rg || p.name.match(rg)));
   }, [keyword, products]);
+
+  useEffect(() => {
+    setChange(cash - cart.reduce((total, item) => total + item.qty * item.price, 0));
+  }, [cart, cash]);
+
+  useEffect(() => {
+    setIsSubmitable(change >= 0 && cart.length > 0);
+  }, [cart, change]);
 
   return (
     <>
@@ -248,10 +277,10 @@ export default function Pos() {
                 <a href="#" className="flex items-center">
                   <span
                     className="flex items-center justify-center h-12 w-12 rounded-2xl bg-[#4dd0e1] shadow-lg text-white"
-                    // x-bind:className="{
-                    //   'hover:bg-cyan-400 text-cyan-100': activeMenu !== 'pos',
-                    //   'bg-cyan-300 shadow-lg text-white': activeMenu === 'pos',
-                    // }"
+                  // x-bind:className="{
+                  //   'hover:bg-cyan-400 text-cyan-100': activeMenu !== 'pos',
+                  //   'bg-cyan-300 shadow-lg text-white': activeMenu === 'pos',
+                  // }"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -511,7 +540,7 @@ export default function Pos() {
                   <div className="flex-1 w-full px-4 overflow-auto">
                     {cart.map((item) => (
                       <div
-                        key={item.id}
+                        key={item.productId}
                         className="select-none mb-3 bg-[#ECEFF1] rounded-lg w-full text-[#455A64] py-2 px-2 flex justify-center"
                       >
                         <img
@@ -550,6 +579,7 @@ export default function Pos() {
                               type="text"
                               className="bg-white rounded-lg text-center shadow focus:outline-none focus:shadow-lg text-sm"
                               value={item.qty}
+                              readOnly
                             />
                             <button
                               onClick={() => addQty(item, 1)}
@@ -591,7 +621,7 @@ export default function Pos() {
                       <div className="mr-2">Rp</div>
                       <input
                         value={numberFormat(cash)}
-                        onKeyUp={(e) => updateCash(e.target.value)}
+                        onChange={(e) => updateCash(e.target.value)}
                         type="text"
                         className="w-28 text-right bg-white shadow rounded-lg focus:bg-white focus:shadow-lg px-2 focus:outline-none"
                       />
@@ -616,7 +646,7 @@ export default function Pos() {
                     {priceFormat(change)}
                   </div>
                 </div>
-                <div className="flex justify-center mb-3 text-lg font-semibold bg-cyan-50 text-cyan-700 rounded-lg py-2 px-3">
+                {/* <div className="flex justify-center mb-3 text-lg font-semibold bg-cyan-50 text-cyan-700 rounded-lg py-2 px-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 inline-block"
@@ -631,15 +661,14 @@ export default function Pos() {
                       d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
                     />
                   </svg>
-                </div>
+                </div> */}
                 <button
                   className={`text-white rounded-2xl text-lg w-full py-3 focus:outline-none 
-              ${
-                submitable()
-                  ? "bg-cyan-500 hover:bg-cyan-600"
-                  : "bg-blue-gray-200"
-              }`}
-                  disabled={!submitable()}
+              ${isSubmitable
+                      ? "bg-cyan-500 hover:bg-cyan-600"
+                      : "bg-[#b0bec5]"
+                    }`}
+                  disabled={!isSubmitable}
                   onClick={submit}
                 >
                   SUBMIT
@@ -648,6 +677,99 @@ export default function Pos() {
             </div>
           </div>
         </div>
+
+        {isShowModalReceipt ? (
+          <div
+            className="fixed w-full h-screen left-0 top-0 z-10 flex flex-wrap justify-center content-center p-24"
+          >
+
+            <div
+              // x-show="isShowModalReceipt"
+              className="fixed bg-[rgba(100,120,130,0.6)] backdrop-blur-[10px] p-4 w-full h-screen left-0 top-0 z-0" onClick={() => setIsShowModalReceipt(false)}
+            // x-transition:enter="transition ease-out duration-100"
+            // x-transition:enter-start="opacity-0"
+            // x-transition:enter-end="opacity-100"
+            // x-transition:leave="transition ease-in duration-100"
+            // x-transition:leave-start="opacity-100"
+            // x-transition:leave-end="opacity-0"
+            ></div>
+
+
+
+            <div
+              // x-show="isShowModalReceipt"
+              className="w-96 rounded-3xl bg-white shadow-xl overflow-hidden z-10"
+            // x-transition:enter="transition ease-out duration-100"
+            // x-transition:enter-start="opacity-0 transform scale-90"
+            // x-transition:enter-end="opacity-100 transform scale-100"
+            // x-transition:leave="transition ease-in duration-100"
+            // x-transition:leave-start="opacity-100 transform scale-100"
+            // x-transition:leave-end="opacity-0 transform scale-90"
+            >
+              <div id="receipt-content" className="text-left w-full text-sm p-6 overflow-auto">
+                <div className="text-center">
+                  <img src="img/receipt-logo.png" alt="Tailwind POS" className="mb-3 w-8 h-8 inline-block" />
+                  <h2 className="text-xl font-semibold">TAILWIND POS</h2>
+                  <p>CABANG KONOHA SELATAN</p>
+                </div>
+                <div className="flex mt-4 text-xs">
+                  <div className="flex-grow">No: <span>{receiptNo}</span></div>
+                  <div>{receiptDate}</div>
+                </div>
+                <hr className="my-2" />
+                <div>
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr>
+                        <th className="py-1 w-1/12 text-center">#</th>
+                        <th className="py-1 text-left">Item</th>
+                        <th className="py-1 w-2/12 text-center">Qty</th>
+                        <th className="py-1 w-3/12 text-right">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cart.map((item, index) => (
+                        <tr key={index}>
+                          <td className="py-2 text-center">{index + 1}</td>
+                          <td className="py-2 text-left">
+                            <span>{item.name}</span>
+                            <br />
+                            <small>{priceFormat(item.price)}</small>
+                          </td>
+                          <td className="py-2 text-center">{item.qty}</td>
+                          <td className="py-2 text-right">{priceFormat(item.qty * item.price)}</td>
+                        </tr>
+                      ))}
+
+                    </tbody>
+                  </table>
+                </div>
+                <hr className="my-2" />
+                <div>
+                  <div className="flex font-semibold">
+                    <div className="flex-grow">TOTAL</div>
+                    <div>{priceFormat(getTotalPrice())}</div>
+                  </div>
+                  <div className="flex text-xs font-semibold">
+                    <div className="flex-grow">PAY AMOUNT</div>
+                    <div>{priceFormat(cash)}</div>
+                  </div>
+                  <hr className="my-2" />
+                  <div className="flex text-xs font-semibold">
+                    <div className="flex-grow">CHANGE</div>
+                    <div>{priceFormat(change)}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 w-full">
+                <button className="bg-cyan-500 text-white text-lg px-4 py-3 rounded-2xl w-full focus:outline-none" onClick={() => printAndProceed()}>PROCEED</button>
+              </div>
+            </div>
+
+
+          </div>
+        ) : (<></>)}
+
       </div>
 
       <div id="print-area" className="print-area"></div>
