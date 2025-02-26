@@ -174,8 +174,9 @@ export default function Pos() {
     const receiptContent = document.getElementById('receipt-content');
     const titleBefore = document.title;
 
-    setTimeout(() => {
+    // setTimeout(() => {
       const printArea = document.getElementById('print-area');
+      // printArea.innerHTML = "<h1>Kaladin Dingin</h1>";
       printArea.innerHTML = receiptContent.innerHTML;
 
       window.print(); // Cetak setelah DOM diperbarui
@@ -185,7 +186,7 @@ export default function Pos() {
       document.title = titleBefore;
       setIsShowModalReceipt(false);
       clear();
-    }, 100); // Delay agar React sempat update DOM
+    // }, 100); // Delay agar React sempat update DOM
   }
 
   const beep = () => {
