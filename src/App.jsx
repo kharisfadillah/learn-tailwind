@@ -14,6 +14,7 @@ import Modal from "./pages/Modal";
 import Modal2 from "./pages/Modal2";
 import Pos from "./pages/Pos";
 import Pos2 from "./pages/Pos2";
+import SearchComponent from "./pages/SearchComponent";
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/modal-2" element={<Modal2 />} />
         <Route path="/pos" element={<Pos />} />
         <Route path="/pos-2" element={<Pos2 />} />
+        <Route path="/search-component" element={<SearchComponent />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

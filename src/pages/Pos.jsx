@@ -5,8 +5,14 @@ export default function Pos() {
   // const [db, setDb] = useState(null);
   // const [first, setFirst] = useState(true);
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [cart, setCart] = useState([]);
   const [cash, setCash] = useState(0);
-  // const [keyword, setKeyword] = useState("");
+  const [change, setChange] = useState(0);
+  const [receiptNo, setReceiptNo] = useState(null);
+  const [receiptDate, setReceiptDate] = useState(null);
+  const [keyword, setKeyword] = useState("");
+  const [isShowModalReceipt, setIsShowModalReceipt] = useState(false);
   // const initDB = async () => {
   //   const database = await openDB("tailwind_store", 1, {
   //     upgrade(db) {
@@ -37,29 +43,33 @@ export default function Pos() {
     return number ? `Rp. ${numberFormat(number)}` : `Rp. 0`;
   };
 
-  // const addToCart = (product) => {
-  //   const index = findCartIndex(product);
-  //   let tempCart = cart.slice();
-  //   if (index === -1) {
-  //     tempCart.push({
-  //       productId: product.id,
-  //       image: product.image,
-  //       name: product.name,
-  //       price: product.price,
-  //       option: product.option,
-  //       qty: 1,
-  //     });
-  //   } else {
-  //     tempCart[index].qty += 1;
-  //   }
-  //   setCart(tempCart);
-  //   // beep();
-  //   // updateChange();
-  // };
+  const addToCart = (product) => {
+    const index = findCartIndex(product);
+    let tempCart = cart.slice();
+    if (index === -1) {
+      tempCart.push({
+        productId: product.id,
+        image: product.image,
+        name: product.name,
+        price: product.price,
+        option: product.option,
+        qty: 1,
+      });
+    } else {
+      tempCart[index].qty += 1;
+    }
+    setCart(tempCart);
+    beep();
+    updateChange();
+  };
 
-  // const findCartIndex = (product) => {
-  //   return cart.findIndex((p) => p.productId === product.id);
-  // };
+  const findCartIndex = (product) => {
+    return cart.findIndex((p) => p.productId === product.id);
+  };
+
+  const getItemsCount = () => {
+    return cart.reduce((count, item) => count + item.qty, 0);
+  };
 
   // const startWithSampleData = async () => {
   //   const response = await fetch("sample.json");
@@ -100,6 +110,77 @@ export default function Pos() {
     // this.beep();
   };
 
+  const addQty = (item, qty) => {
+    const index = cart.findIndex((i) => i.productId === item.productId);
+    if (index === -1) {
+      return;
+    }
+    const afterAdd = item.qty + qty;
+    let tempCart = cart.slice();
+    if (afterAdd === 0) {
+      tempCart.splice(index, 1);
+      clearSound();
+    } else {
+      tempCart[index].qty = afterAdd;
+      beep();
+    }
+    setCart(tempCart);
+    updateChange();
+  };
+
+  const updateChange = () => {
+    setChange(cash - getTotalPrice());
+  };
+  const updateCash = (value) => {
+    setCash(parseFloat(value.replace(/[^0-9]+/g, "")));
+    updateChange();
+  };
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => total + item.qty * item.price, 0);
+  };
+
+  const submitable = () => {
+    return change >= 0 && cart.length > 0;
+  };
+
+  const submit = () => {
+    const time = new Date();
+    setIsShowModalReceipt(true);
+    setReceiptNo(`TWPOS-KS-${Math.round(time.getTime() / 1000)}`);
+    setReceiptDate(dateFormat(time));
+  };
+
+  const dateFormat = (date) => {
+    const formatter = new Intl.DateTimeFormat("id", {
+      dateStyle: "short",
+      timeStyle: "short",
+    });
+    return formatter.format(date);
+  };
+
+  const clear = () => {
+    setCash(0);
+    setCart([]);
+    setReceiptNo(null);
+    setReceiptDate(null);
+    updateChange();
+    clearSound();
+  };
+
+  const beep = () => {
+    playSound("sound/beep-29.mp3");
+  };
+  const clearSound = () => {
+    playSound("sound/button-21.mp3");
+  };
+  const playSound = (src) => {
+    const sound = new Audio(src);
+    sound.play();
+    sound.onended = () => {
+      console.log("Sound finished playing");
+    };
+  };
+
   useEffect(() => {
     document.body.classList.add("bg-[#ECEFF1]");
 
@@ -113,6 +194,11 @@ export default function Pos() {
       document.body.classList.remove("bg-[#ECEFF1]");
     };
   }, []);
+
+  useEffect(() => {
+    const rg = keyword ? new RegExp(keyword, "gi") : null;
+    setFilteredProducts(products.filter((p) => !rg || p.name.match(rg)));
+  }, [keyword, products]);
 
   return (
     <>
@@ -296,13 +382,13 @@ export default function Pos() {
                 type="text"
                 className="bg-white rounded-3xl shadow text-lg full w-full h-16 py-4 pl-16 transition-shadow focus:shadow-2xl focus:outline-none"
                 placeholder="Cari menu ..."
-                // value={keyword}
-                // onChange={(e) => setKeyword(e.target.value)}
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
               />
             </div>
             <div className="h-full overflow-hidden mt-4">
               <div className="h-full overflow-y-auto px-2">
-                {products.length === 0 ? (
+                {filteredProducts.length === 0 ? (
                   <div className="select-none bg-[#CFD8DC] rounded-3xl flex flex-wrap content-center justify-center h-full opacity-25">
                     <div className="w-full text-center">
                       <svg
@@ -328,13 +414,13 @@ export default function Pos() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-4 gap-4 pb-3">
-                    {products.map((product) => (
+                    {filteredProducts.map((product) => (
                       <div
                         key={product.id}
                         role="button"
                         className="select-none cursor-pointer transition-shadow overflow-hidden rounded-2xl bg-white shadow hover:shadow-lg"
                         title={product.name}
-                        // onClick={addToCart(product)}
+                        onClick={() => addToCart(product)}
                       >
                         <img src={product.image} alt={product.name} />
                         <div className="flex pb-3 px-3 text-sm -mt-3">
@@ -355,38 +441,160 @@ export default function Pos() {
 
           <div className="w-5/12 flex flex-col bg-[#ECEFF1] h-full pr-4 pl-2 py-4">
             <div className="bg-white rounded-3xl flex flex-col h-full shadow">
-              <div className="flex-1 w-full p-4 opacity-25 select-none flex flex-col flex-wrap content-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-16 inline-block"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-                <p>CART EMPTY</p>
-              </div>
+              {cart.length === 0 ? (
+                <div className="flex-1 w-full p-4 opacity-25 select-none flex flex-col flex-wrap content-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-16 inline-block"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <p>CART EMPTY</p>
+                </div>
+              ) : (
+                <div className="flex-1 flex flex-col overflow-auto">
+                  <div className="h-16 text-center flex justify-center">
+                    <div className="pl-8 text-left text-lg py-4 relative">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 inline-block"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
+                      {getItemsCount() > 0 ? (
+                        <div className="text-center absolute bg-cyan-500 text-white w-5 h-5 text-xs p-0 leading-5 rounded-full -right-2 top-3">
+                          {getItemsCount()}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div className="flex-grow px-8 text-right text-lg py-4 relative">
+                      <button
+                        onClick={() => clear()}
+                        className="text-blue-gray-300 hover:text-pink-500 focus:outline-none"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 inline-block"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 w-full px-4 overflow-auto">
+                    {cart.map((item) => (
+                      <div
+                        key={item.id}
+                        className="select-none mb-3 bg-[#ECEFF1] rounded-lg w-full text-[#455A64] py-2 px-2 flex justify-center"
+                      >
+                        <img
+                          src={item.image}
+                          alt=""
+                          className="rounded-lg h-10 w-10 bg-white shadow mr-2"
+                        />
+                        <div className="flex-grow">
+                          <h5 className="text-sm">{item.name}</h5>
+                          <p className="text-xs block">
+                            {priceFormat(item.price)}
+                          </p>
+                        </div>
+                        <div className="py-1">
+                          <div className="w-28 grid grid-cols-3 gap-2 ml-2">
+                            <button
+                              onClick={() => addQty(item, -1)}
+                              className="rounded-lg text-center py-1 text-white bg-[#546E7a] hover:bg-[#455a64] focus:outline-none"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-3 inline-block"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M20 12H4"
+                                />
+                              </svg>
+                            </button>
+                            <input
+                              type="text"
+                              className="bg-white rounded-lg text-center shadow focus:outline-none focus:shadow-lg text-sm"
+                              value={item.qty}
+                            />
+                            <button
+                              onClick={() => addQty(item, 1)}
+                              className="rounded-lg text-center py-1 text-white bg-[#546E7a] hover:bg-[#455A64] focus:outline-none"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-3 inline-block"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="select-none h-auto w-full text-center pt-3 pb-4 px-4">
                 <div className="flex mb-3 text-lg font-semibold text-blue-gray-700">
                   <div>TOTAL</div>
-                  <div className="text-right w-full">Rp. 200.000</div>
+                  <div className="text-right w-full">
+                    {priceFormat(getTotalPrice())}
+                  </div>
                 </div>
                 <div className="mb-3 text-blue-gray-700 px-3 pt-2 pb-3 rounded-lg bg-[#ECEFF1]">
                   <div className="flex text-lg font-semibold">
                     <div className="flex-grow text-left">CASH</div>
                     <div className="flex text-right">
                       <div className="mr-2">Rp</div>
-                      {/* <input
+                      <input
                         value={numberFormat(cash)}
+                        onKeyUp={(e) => updateCash(e.target.value)}
                         type="text"
                         className="w-28 text-right bg-white shadow rounded-lg focus:bg-white focus:shadow-lg px-2 focus:outline-none"
-                      /> */}
+                      />
                     </div>
                   </div>
                   <hr className="my-2" />
@@ -405,7 +613,7 @@ export default function Pos() {
                 <div className="flex mb-3 text-lg font-semibold bg-cyan-50 text-blue-gray-700 rounded-lg py-2 px-3">
                   <div className="text-cyan-800">CHANGE</div>
                   <div className="text-right flex-grow text-cyan-600">
-                    Rp. 200.000
+                    {priceFormat(change)}
                   </div>
                 </div>
                 <div className="flex justify-center mb-3 text-lg font-semibold bg-cyan-50 text-cyan-700 rounded-lg py-2 px-3">
@@ -425,13 +633,14 @@ export default function Pos() {
                   </svg>
                 </div>
                 <button
-                  className="text-white rounded-2xl text-lg w-full py-3 focus:outline-none bg-cyan-500 hover:bg-cyan-600"
-                  //   x-bind:class="{
-                  //     'bg-cyan-500 hover:bg-cyan-600': submitable(),
-                  //     'bg-blue-gray-200': !submitable()
-                  //   }"
-                  //   :disabled="!submitable()"
-                  //   x-on:click="submit()"
+                  className={`text-white rounded-2xl text-lg w-full py-3 focus:outline-none 
+              ${
+                submitable()
+                  ? "bg-cyan-500 hover:bg-cyan-600"
+                  : "bg-blue-gray-200"
+              }`}
+                  disabled={!submitable()}
+                  onClick={submit}
                 >
                   SUBMIT
                 </button>
