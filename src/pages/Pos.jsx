@@ -171,23 +171,23 @@ export default function Pos() {
   };
 
   const printAndProceed = () => {
-    const receiptContent = document.getElementById('receipt-content');
+    const receiptContent = document.getElementById("receipt-content");
     const titleBefore = document.title;
 
     // setTimeout(() => {
-      const printArea = document.getElementById('print-area');
-      // printArea.innerHTML = "<h1>Kaladin Dingin</h1>";
-      printArea.innerHTML = receiptContent.innerHTML;
+    const printArea = document.getElementById("print-area");
+    // printArea.innerHTML = "<h1>Kaladin Dingin</h1>";
+    printArea.innerHTML = receiptContent.innerHTML;
+    document.title = receiptNo;
+    window.print(); // Cetak setelah DOM diperbarui
 
-      window.print(); // Cetak setelah DOM diperbarui
-
-      // Reset setelah print selesai
-      printArea.innerHTML = "";
-      document.title = titleBefore;
-      setIsShowModalReceipt(false);
-      clear();
+    // Reset setelah print selesai
+    printArea.innerHTML = "";
+    document.title = titleBefore;
+    setIsShowModalReceipt(false);
+    clear();
     // }, 100); // Delay agar React sempat update DOM
-  }
+  };
 
   const beep = () => {
     playSound("sound/beep-29.mp3");
@@ -223,7 +223,9 @@ export default function Pos() {
   }, [keyword, products]);
 
   useEffect(() => {
-    setChange(cash - cart.reduce((total, item) => total + item.qty * item.price, 0));
+    setChange(
+      cash - cart.reduce((total, item) => total + item.qty * item.price, 0)
+    );
   }, [cart, cash]);
 
   useEffect(() => {
@@ -278,10 +280,10 @@ export default function Pos() {
                 <a href="#" className="flex items-center">
                   <span
                     className="flex items-center justify-center h-12 w-12 rounded-2xl bg-[#4dd0e1] shadow-lg text-white"
-                  // x-bind:className="{
-                  //   'hover:bg-cyan-400 text-cyan-100': activeMenu !== 'pos',
-                  //   'bg-cyan-300 shadow-lg text-white': activeMenu === 'pos',
-                  // }"
+                    // x-bind:className="{
+                    //   'hover:bg-cyan-400 text-cyan-100': activeMenu !== 'pos',
+                    //   'bg-cyan-300 shadow-lg text-white': activeMenu === 'pos',
+                    // }"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -641,34 +643,17 @@ export default function Pos() {
                     ))}
                   </div>
                 </div>
-                <div className="flex mb-3 text-lg font-semibold bg-cyan-50 text-blue-gray-700 rounded-lg py-2 px-3">
-                  <div className="text-cyan-800">CHANGE</div>
-                  <div className="text-right flex-grow text-cyan-600">
+                <div className={`flex mb-3 text-lg font-semibold ${ change < 0 ? "bg-pink-100" : "bg-cyan-50"} rounded-lg py-2 px-3`}>
+                  <div className={ change < 0 ? "text-pink-800" : "text-cyan-800"}>CHANGE</div>
+                  <div className={`text-right flex-grow ${ change < 0 ? "text-pink-600" : "text-cyan-600"}`}>
                     {priceFormat(change)}
                   </div>
                 </div>
-                {/* <div className="flex justify-center mb-3 text-lg font-semibold bg-cyan-50 text-cyan-700 rounded-lg py-2 px-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 inline-block"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
-                    />
-                  </svg>
-                </div> */}
                 <button
                   className={`text-white rounded-2xl text-lg w-full py-3 focus:outline-none 
-              ${isSubmitable
-                      ? "bg-cyan-500 hover:bg-cyan-600"
-                      : "bg-[#b0bec5]"
-                    }`}
+              ${
+                isSubmitable ? "bg-cyan-500 hover:bg-cyan-600" : "bg-[#b0bec5]"
+              }`}
                   disabled={!isSubmitable}
                   onClick={submit}
                 >
@@ -680,41 +665,46 @@ export default function Pos() {
         </div>
 
         {isShowModalReceipt ? (
-          <div
-            className="fixed w-full h-screen left-0 top-0 z-10 flex flex-wrap justify-center content-center p-24"
-          >
-
+          <div className="fixed w-full h-screen left-0 top-0 z-10 flex flex-wrap justify-center content-center p-24">
             <div
               // x-show="isShowModalReceipt"
-              className="fixed bg-[rgba(100,120,130,0.6)] backdrop-blur-[10px] p-4 w-full h-screen left-0 top-0 z-0" onClick={() => setIsShowModalReceipt(false)}
-            // x-transition:enter="transition ease-out duration-100"
-            // x-transition:enter-start="opacity-0"
-            // x-transition:enter-end="opacity-100"
-            // x-transition:leave="transition ease-in duration-100"
-            // x-transition:leave-start="opacity-100"
-            // x-transition:leave-end="opacity-0"
+              className="fixed bg-[rgba(100,120,130,0.6)] backdrop-blur-[10px] p-4 w-full h-screen left-0 top-0 z-0"
+              onClick={() => setIsShowModalReceipt(false)}
+              // x-transition:enter="transition ease-out duration-100"
+              // x-transition:enter-start="opacity-0"
+              // x-transition:enter-end="opacity-100"
+              // x-transition:leave="transition ease-in duration-100"
+              // x-transition:leave-start="opacity-100"
+              // x-transition:leave-end="opacity-0"
             ></div>
-
-
 
             <div
               // x-show="isShowModalReceipt"
               className="w-96 rounded-3xl bg-white shadow-xl overflow-hidden z-10"
-            // x-transition:enter="transition ease-out duration-100"
-            // x-transition:enter-start="opacity-0 transform scale-90"
-            // x-transition:enter-end="opacity-100 transform scale-100"
-            // x-transition:leave="transition ease-in duration-100"
-            // x-transition:leave-start="opacity-100 transform scale-100"
-            // x-transition:leave-end="opacity-0 transform scale-90"
+              // x-transition:enter="transition ease-out duration-100"
+              // x-transition:enter-start="opacity-0 transform scale-90"
+              // x-transition:enter-end="opacity-100 transform scale-100"
+              // x-transition:leave="transition ease-in duration-100"
+              // x-transition:leave-start="opacity-100 transform scale-100"
+              // x-transition:leave-end="opacity-0 transform scale-90"
             >
-              <div id="receipt-content" className="text-left w-full text-sm p-6 overflow-auto">
+              <div
+                id="receipt-content"
+                className="text-left w-full text-sm p-6 overflow-auto"
+              >
                 <div className="text-center">
-                  <img src="img/receipt-logo.png" alt="Tailwind POS" className="mb-3 w-8 h-8 inline-block" />
+                  <img
+                    src="img/receipt-logo.png"
+                    alt="Tailwind POS"
+                    className="mb-3 w-8 h-8 inline-block"
+                  />
                   <h2 className="text-xl font-semibold">TAILWIND POS</h2>
                   <p>CABANG KONOHA SELATAN</p>
                 </div>
                 <div className="flex mt-4 text-xs">
-                  <div className="flex-grow">No: <span>{receiptNo}</span></div>
+                  <div className="flex-grow">
+                    No: <span>{receiptNo}</span>
+                  </div>
                   <div>{receiptDate}</div>
                 </div>
                 <hr className="my-2" />
@@ -738,10 +728,11 @@ export default function Pos() {
                             <small>{priceFormat(item.price)}</small>
                           </td>
                           <td className="py-2 text-center">{item.qty}</td>
-                          <td className="py-2 text-right">{priceFormat(item.qty * item.price)}</td>
+                          <td className="py-2 text-right">
+                            {priceFormat(item.qty * item.price)}
+                          </td>
                         </tr>
                       ))}
-
                     </tbody>
                   </table>
                 </div>
@@ -763,14 +754,18 @@ export default function Pos() {
                 </div>
               </div>
               <div className="p-4 w-full">
-                <button className="bg-cyan-500 text-white text-lg px-4 py-3 rounded-2xl w-full focus:outline-none" onClick={() => printAndProceed()}>PROCEED</button>
+                <button
+                  className="bg-cyan-500 text-white text-lg px-4 py-3 rounded-2xl w-full focus:outline-none"
+                  onClick={() => printAndProceed()}
+                >
+                  PROCEED
+                </button>
               </div>
             </div>
-
-
           </div>
-        ) : (<></>)}
-
+        ) : (
+          <></>
+        )}
       </div>
 
       <div id="print-area" className="print-area"></div>
