@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-// import { openDB } from "idb";
 
 export default function Pos() {
-  // const [db, setDb] = useState(null);
-  // const [first, setFirst] = useState(true);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [cart, setCart] = useState([]);
@@ -14,25 +11,6 @@ export default function Pos() {
   const [keyword, setKeyword] = useState("");
   const [isSubmitable, setIsSubmitable] = useState(false);
   const [isShowModalReceipt, setIsShowModalReceipt] = useState(false);
-  // const initDB = async () => {
-  //   const database = await openDB("tailwind_store", 1, {
-  //     upgrade(db) {
-  //       if (!db.objectStoreNames.contains("products")) {
-  //         db.createObjectStore("products", {
-  //           keyPath: "id",
-  //           autoIncrement: true,
-  //         });
-  //       }
-  //       if (!db.objectStoreNames.contains("sales")) {
-  //         db.createObjectStore("sales", {
-  //           keyPath: "id",
-  //           autoIncrement: true,
-  //         });
-  //       }
-  //     },
-  //   });
-  //   setDb(database);
-  // };
 
   const loadProducts = async () => {
     const response = await fetch("sample.json");
@@ -61,7 +39,6 @@ export default function Pos() {
     }
     setCart(tempCart);
     beep();
-    // updateChange();
   };
 
   const findCartIndex = (product) => {
@@ -72,33 +49,6 @@ export default function Pos() {
     return cart.reduce((count, item) => count + item.qty, 0);
   };
 
-  // const startWithSampleData = async () => {
-  //   const response = await fetch("sample.json");
-  //   const data = await response.json();
-  //   console.log(data);
-  //   setProducts(data.products);
-
-  //   for (let product of data.products) {
-  //     await db.add("products", product);
-  //   }
-
-  //   // Ubah state firstTime menjadi false
-  //   setFirstTime(false);
-  // };
-
-  // const startBlank = () => {
-  //   setFirstTime(false);
-  // };
-
-  // const setFirstTime = (firstTime) => {
-  //   setFirst(firstTime);
-  //   if (firstTime) {
-  //     localStorage.removeItem("first_time");
-  //   } else {
-  //     localStorage.setItem("first_time", new Date().getTime());
-  //   }
-  // };
-
   const numberFormat = (number) => {
     if (!number) return "";
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -107,7 +57,6 @@ export default function Pos() {
   const addCash = (amount) => {
     console.log(`click ${amount}`);
     setCash((cash || 0) + amount);
-    // this.updateChange();
     beep();
   };
 
@@ -126,25 +75,14 @@ export default function Pos() {
       beep();
     }
     setCart(tempCart);
-    // updateChange();
   };
 
-  // const updateChange = () => {
-  //   console.log(`cash : ${cash}`);
-  //   console.log(`total price : ${getTotalPrice()}`);
-  //   setChange(cash - getTotalPrice());
-  // };
   const updateCash = (value) => {
     setCash(parseFloat(value.replace(/[^0-9]+/g, "")));
-    // updateChange();
   };
   const getTotalPrice = () => {
     return cart.reduce((total, item) => total + item.qty * item.price, 0);
   };
-
-  // const submitable = () => {
-  //   return change >= 0 && cart.length > 0;
-  // };
 
   const submit = () => {
     const time = new Date();
@@ -166,7 +104,6 @@ export default function Pos() {
     setCart([]);
     setReceiptNo(null);
     setReceiptDate(null);
-    // updateChange();
     clearSound();
   };
 
@@ -174,20 +111,16 @@ export default function Pos() {
     const receiptContent = document.getElementById("receipt-content");
     const titleBefore = document.title;
 
-    // setTimeout(() => {
-    const printArea = document.getElementById("print-area");
-    // printArea.innerHTML = "<h1>Kaladin Dingin</h1>";
+    const printArea = document.getElementById('print-area');
     printArea.innerHTML = receiptContent.innerHTML;
-    document.title = receiptNo;
-    window.print(); // Cetak setelah DOM diperbarui
 
-    // Reset setelah print selesai
+    window.print();
+
     printArea.innerHTML = "";
     document.title = titleBefore;
     setIsShowModalReceipt(false);
     clear();
-    // }, 100); // Delay agar React sempat update DOM
-  };
+  }
 
   const beep = () => {
     playSound("sound/beep-29.mp3");
@@ -207,10 +140,6 @@ export default function Pos() {
     document.body.classList.add("bg-[#ECEFF1]");
 
     loadProducts();
-
-    // initDB();
-
-    // setFirstTime(localStorage.getItem("first_time") === null);
 
     return () => {
       document.body.classList.remove("bg-[#ECEFF1]");
@@ -280,10 +209,6 @@ export default function Pos() {
                 <a href="#" className="flex items-center">
                   <span
                     className="flex items-center justify-center h-12 w-12 rounded-2xl bg-[#4dd0e1] shadow-lg text-white"
-                    // x-bind:className="{
-                    //   'hover:bg-cyan-400 text-cyan-100': activeMenu !== 'pos',
-                    //   'bg-cyan-300 shadow-lg text-white': activeMenu === 'pos',
-                    // }"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -667,26 +592,11 @@ export default function Pos() {
         {isShowModalReceipt ? (
           <div className="fixed w-full h-screen left-0 top-0 z-10 flex flex-wrap justify-center content-center p-24">
             <div
-              // x-show="isShowModalReceipt"
-              className="fixed bg-[rgba(100,120,130,0.6)] backdrop-blur-[10px] p-4 w-full h-screen left-0 top-0 z-0"
-              onClick={() => setIsShowModalReceipt(false)}
-              // x-transition:enter="transition ease-out duration-100"
-              // x-transition:enter-start="opacity-0"
-              // x-transition:enter-end="opacity-100"
-              // x-transition:leave="transition ease-in duration-100"
-              // x-transition:leave-start="opacity-100"
-              // x-transition:leave-end="opacity-0"
+              className="fixed bg-[rgba(100,120,130,0.6)] backdrop-blur-[10px] p-4 w-full h-screen left-0 top-0 z-0" onClick={() => setIsShowModalReceipt(false)}
             ></div>
 
             <div
-              // x-show="isShowModalReceipt"
               className="w-96 rounded-3xl bg-white shadow-xl overflow-hidden z-10"
-              // x-transition:enter="transition ease-out duration-100"
-              // x-transition:enter-start="opacity-0 transform scale-90"
-              // x-transition:enter-end="opacity-100 transform scale-100"
-              // x-transition:leave="transition ease-in duration-100"
-              // x-transition:leave-start="opacity-100 transform scale-100"
-              // x-transition:leave-end="opacity-0 transform scale-90"
             >
               <div
                 id="receipt-content"

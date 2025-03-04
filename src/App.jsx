@@ -15,6 +15,8 @@ import Modal2 from "./pages/Modal2";
 import Pos from "./pages/Pos";
 import Pos2 from "./pages/Pos2";
 import SearchComponent from "./pages/SearchComponent";
+import Album from "./pages/Album";
+import Photo from "./pages/Photo";
 
 function App() {
 
@@ -36,6 +38,8 @@ function App() {
         <Route path="/pos" element={<Pos />} />
         <Route path="/pos-2" element={<Pos2 />} />
         <Route path="/search-component" element={<SearchComponent />} />
+        <Route path="/album" element={<Album />} />
+        <Route path="/photos" element={<Photo />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
