@@ -52,6 +52,15 @@ export default function Home() {
             <a href="/album" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 Album
             </a>
+            <a href="/stack" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Stack
+            </a>
+            <a href="/backdrop" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Backdrop
+            </a>
+            <a href="/neat" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Neat Landing Page
+            </a>
         </div>
     );
 }

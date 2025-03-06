@@ -17,6 +17,9 @@ import Pos2 from "./pages/Pos2";
 import SearchComponent from "./pages/SearchComponent";
 import Album from "./pages/Album";
 import Photo from "./pages/Photo";
+import Stack from "./pages/Stack";
+import Backdrop from "./pages/Backdrop";
+import NeatLandingPage from "./pages/NeatLandingPage";
 
 function App() {
 
@@ -40,6 +43,9 @@ function App() {
         <Route path="/search-component" element={<SearchComponent />} />
         <Route path="/album" element={<Album />} />
         <Route path="/photos" element={<Photo />} />
+        <Route path="/stack" element={<Stack />} />
+        <Route path="/backdrop" element={<Backdrop />} />
+        <Route path="/neat" element={<NeatLandingPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

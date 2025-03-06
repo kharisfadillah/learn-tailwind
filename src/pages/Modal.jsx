@@ -29,7 +29,7 @@ export default function Modal() {
                             animate={{ y: 0, opacity: 1, transition: { duration: 0.5 } }}
                             exit={{ y: -50, opacity: 0, transition: { duration: 0.5 } }}
                         >
-                            <h2 className="text-xl font-semibold mb-4">Modal Title</h2>
+                            <h2 className="text-xl font-semibold mb-4 select-none">Modal Title</h2>
                             <p className="text-gray-600 mb-4">This is a simple modal using Tailwind CSS and React.</p>
                             <div className="flex justify-end">
                                 <button
