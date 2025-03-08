@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 const CustomButton = ({ label, href }) => {
     return (
-        <a href={href} className="basis-1/5 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+        <a href={href} className="font-custom basis-1/5 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
             {label}
         </a>
     );
@@ -22,7 +22,7 @@ export default function Home() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
             <div className="w-4/5 h-auto m-auto">
-                <h1 className="text-4xl text-center mb-14">Belajar Tailwind</h1>
+                <h1 className="text-4xl text-center mb-14 font-custom">Belajar Tailwind</h1>
                 <div className="grid grid-cols-5 gap-4 items-center">
                     <CustomButton label="Spacing" href="/spacing" />
                     <CustomButton label="Sizing" href="/sizing" />
