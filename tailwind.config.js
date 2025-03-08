@@ -18,6 +18,9 @@ export default {
           900: "#0b1238",
         },
       },
+      fontFamily: {
+        custom: ['Oswal', 'sans-serif'],
+      },
     },
   },
   plugins: [],

@@ -1,4 +1,18 @@
+import PropTypes from "prop-types";
 import { useEffect } from "react";
+
+const CustomButton = ({ label, href }) => {
+    return (
+        <a href={href} className="basis-1/5 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            {label}
+        </a>
+    );
+}
+
+CustomButton.propTypes = {
+    label: PropTypes.string.isRequired,
+    href: PropTypes.string.isRequired,
+};
 
 export default function Home() {
     useEffect(() => {
@@ -6,61 +20,32 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="flex flex-wrap items-center justify-center h-screen text-center gap-6 p-80">
-            <a href="/spacing" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Spacing
-            </a>
-            <a href="/sizing" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Sizing
-            </a>
-            <a href="/layout" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Layout
-            </a>
-            <a href="/flex" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Flex
-            </a>
-            <a href="/grid" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Grid
-            </a>
-            <a href="/landing-page" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Landing Page
-            </a>
-            <a href="/kalkulator" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Kalkulator
-            </a>
-            <a href="/calculator" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Calculator
-            </a>
-            <a href="/healthcare" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                HealthCare
-            </a>
-            <a href="/modal" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Modal
-            </a>
-            <a href="/modal-2" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Modal2
-            </a>
-            <a href="/pos" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Pos
-            </a>
-            <a href="/pos-2" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Pos2
-            </a>
-            <a href="/search-component" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Search Component
-            </a>
-            <a href="/album" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Album
-            </a>
-            <a href="/stack" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Stack
-            </a>
-            <a href="/backdrop" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Backdrop
-            </a>
-            <a href="/neat" className="w-1/5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Neat Landing Page
-            </a>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="w-4/5 h-auto m-auto">
+                <h1 className="text-4xl text-center mb-14">Belajar Tailwind</h1>
+                <div className="grid grid-cols-5 gap-4 items-center">
+                    <CustomButton label="Spacing" href="/spacing" />
+                    <CustomButton label="Sizing" href="/sizing" />
+                    <CustomButton label="Layout" href="/layout" />
+                    <CustomButton label="Flex" href="/flex" />
+                    <CustomButton label="Grid" href="/grid" />
+                    <CustomButton label="Landing Page" href="/landing-page" />
+                    <CustomButton label="Kalkulator" href="/kalkulator" />
+                    <CustomButton label="Calculator" href="/calculator" />
+                    <CustomButton label="Healthcare" href="/healthcare" />
+                    <CustomButton label="Modal" href="/modal" />
+                    <CustomButton label="Modal 2" href="/modal-2" />
+                    <CustomButton label="Pos" href="/pos" />
+                    <CustomButton label="Pos 2" href="/pos-2" />
+                    <CustomButton label="Search Component" href="/search-component" />
+                    <CustomButton label="Album" href="/album" />
+                    <CustomButton label="Stack" href="/stack" />
+                    <CustomButton label="Backdrop" href="/backdrop" />
+                    <CustomButton label="Neat Landing Page" href="/neat" />
+                    <CustomButton label="Custom Font" href="/custom-font" />
+                </div>
+            </div>
+
         </div>
     );
 }

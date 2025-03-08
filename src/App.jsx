@@ -20,6 +20,7 @@ import Photo from "./pages/Photo";
 import Stack from "./pages/Stack";
 import Backdrop from "./pages/Backdrop";
 import NeatLandingPage from "./pages/NeatLandingPage";
+import CustomFont from "./pages/CustomFont";
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
         <Route path="/stack" element={<Stack />} />
         <Route path="/backdrop" element={<Backdrop />} />
         <Route path="/neat" element={<NeatLandingPage />} />
+        <Route path="/custom-font" element={<CustomFont />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
