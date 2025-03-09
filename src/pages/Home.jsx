@@ -43,6 +43,8 @@ export default function Home() {
                     <CustomButton label="Backdrop" href="/backdrop" />
                     <CustomButton label="Neat Landing Page" href="/neat" />
                     <CustomButton label="Custom Font" href="/custom-font" />
+                    <CustomButton label="Animasi" href="/animasi" />
+                    <CustomButton label="Tabel" href="/tabel" />
                 </div>
             </div>
 

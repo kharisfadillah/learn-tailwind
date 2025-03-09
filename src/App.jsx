@@ -21,6 +21,8 @@ import Stack from "./pages/Stack";
 import Backdrop from "./pages/Backdrop";
 import NeatLandingPage from "./pages/NeatLandingPage";
 import CustomFont from "./pages/CustomFont";
+import Animasi from "./pages/Animasi";
+import Tabel from "./pages/Tabel";
 
 function App() {
 
@@ -48,6 +50,8 @@ function App() {
         <Route path="/backdrop" element={<Backdrop />} />
         <Route path="/neat" element={<NeatLandingPage />} />
         <Route path="/custom-font" element={<CustomFont />} />
+        <Route path="/animasi" element={<Animasi />} />
+        <Route path="/tabel" element={<Tabel />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
