@@ -23,6 +23,7 @@ import NeatLandingPage from "./pages/NeatLandingPage";
 import CustomFont from "./pages/CustomFont";
 import Animasi from "./pages/Animasi";
 import Tabel from "./pages/Tabel";
+import Toast from "./pages/Toast";
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
         <Route path="/custom-font" element={<CustomFont />} />
         <Route path="/animasi" element={<Animasi />} />
         <Route path="/tabel" element={<Tabel />} />
+        <Route path="/toast" element={<Toast />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -45,6 +45,7 @@ export default function Home() {
                     <CustomButton label="Custom Font" href="/custom-font" />
                     <CustomButton label="Animasi" href="/animasi" />
                     <CustomButton label="Tabel" href="/tabel" />
+                    <CustomButton label="Toast" href="/toast" />
                 </div>
             </div>
 
